@@ -107,3 +107,5 @@ print("# of candidates -> best guess")
 for data in data_list:
     search_candidates, search_guessess = search(words, data)
     print("{} -> {}".format(len(search_candidates), search_guessess[0]))
+
+print("Alternatives: {}".format(search_guessess[1:min(6, len(search_guessess) - 1)]))
