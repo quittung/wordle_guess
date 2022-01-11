@@ -3,6 +3,7 @@ A script to take the fun out of playing wordle.
 
 ## Usage
 Feed it the current hints and you will get the a word to enter. Repeat until finding the solution usually takes 3 or 4 rounds to complete.
+
 The main script is wordle.py. The data is entered as a python dictionary at around line 80, which is a bit clunky and could be improved. Sample data is already included.
 
 ## License and Attributions
