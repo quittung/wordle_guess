@@ -6,6 +6,8 @@ Feed it the current hints and you will get the a word to enter. Repeat until fin
 
 The main script is wordle.py. The data is entered as a python dictionary at around line 80, which is a bit clunky and could be improved. Sample data is already included.
 
+Because of type hinting, **Python 3.9 or higher is required**.
+
 ## License and Attributions
 Word list (en_full.txt) is taken from [hermitdave/FrequencyWords](https://github.com/hermitdave/FrequencyWords), which is scraped from OpenSubtitles. words.txt is derived from that. License is CC-by-sa-4.0.
 
