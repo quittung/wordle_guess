@@ -1,5 +1,5 @@
 # wordle_guess
-A script to take the fun out of playing wordle.
+A script to take the fun out of playing [Wordle](https://www.powerlanguage.co.uk/wordle/).
 
 ## Usage
 Feed it the current hints and you will get the a word to enter. Repeat until finding the solution usually takes 3 or 4 rounds to complete.
