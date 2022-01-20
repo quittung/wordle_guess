@@ -38,7 +38,9 @@ while True:
     # update data
     for i in range(5):
         if colors[i] == "b":
-            data["black"] += word[i]
+            # a character can be black if all other instances of it have been found
+            if not (word[i] in data["yellow"] or word[i] in data["yellow"]): 
+                data["black"] += word[i]
         elif colors[i] == "y":
             if word[i] in data["yellow"]:
                 data["yellow"][word[i]].append(i)
