@@ -3,22 +3,35 @@ A script to take the fun out of playing [Wordle](https://www.powerlanguage.co.uk
 
 
 ## Usage
-Feed it the current hints and you will get the a word to enter. Repeat until finding the solution usually takes 3 or 4 rounds to complete.
+Feed it the current hints and you will get the a word to try. Repeat until finding the solution. Usually takes 3 or 4 rounds to complete.
 
-The main script is wordle.py. The data is entered as a python dictionary at around line 80, which is a bit clunky and could be improved. Sample data is already included.
+Use the script `wordle_prompt.py` for an interactive prompt. `wordle.py` contains all of the internal logic for filtering words. Sample output is below.
 
 Because of type hinting, **Python 3.9 or higher is required**.
 
 
 ## Sample Output
-I tried "tears" first, despite the script suggesting right.
 ```
-# of candidates -> best guess
-99852 -> right
-3163 -> wrong
-51 -> drink
+try 'tears' first
+line by line, enter a word you tried
+then enter the colors you got as g, y, b
+
+enter word:   tears
+enter colors: bgbyb
+1256 -> never
+Alternatives: ['weren', 'mercy', 'fever', 'nerve', 'derek']
+
+enter word:   never
+enter colors: ggyyy
+4 -> nerve
+Alternatives: ['nervy', 'nervo']
+
+enter word:   nerve
+enter colors: ggggg
+2 -> nerve
+Alternatives: []
 ```
-The solution was indeed "drink".
+The solution was indeed "nerve".
 
 
 ## License and Attributions
