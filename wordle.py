@@ -15,14 +15,6 @@ def filter_green(word_list, letter, index):
     """filters out words that don't have a given letter in a specified spot"""
     return [word for word in word_list if word[index] == letter]
 
-def filter_letter_count(word_list: list[str], letter: str, count: int):
-    """filters out words that have more or less of a given letter than specified"""
-    return [word for word in word_list if word.count(letter) == count]
-
-def filter_duplicates(word_list: list[str]):
-    """filters out words that have duplicate letters"""
-    return [word for word in word_list if len(set(word)) == len(word)]
-
 def search(word_list: list[str], data: dict):
     """searches for candidates and guesses for a given word list and data set"""
     candidates = filter_black(word_list.copy(), data["black"])
@@ -35,14 +27,7 @@ def search(word_list: list[str], data: dict):
     for letter in data_green:
         candidates = filter_green(candidates, letter, data_green[letter])
 
-
-    guesses = filter_duplicates(candidates)
-    for letter in data_yellow:
-        guesses = filter_letter_count(guesses, letter, 1)
-    for letter in data_green:
-        guesses = filter_letter_count(guesses, letter, 1)
-
-    return candidates, guesses
+    return candidates
 
 
 
@@ -85,27 +70,32 @@ data_list = [
         
     }
 },{
-    "black": "teas",
+    "black": "tas",
     "yellow": {
         "r": [3]
     },
     "green": {
+        "e": 1
     }
 },{
-    "black": "teaswog",
+    "black": "tas",
     "yellow": {
+        "r": [3, 4],
+        "v": [2],
+        "e": [3]
     },
     "green": {
-        "r": 1,
-        "n": 3
+        "e": 1,
+        "n": 0
     }
 }]
-# solution was drink
+# solution for test data was nerve
 
 
+print("try starting with 'tears'")
 print("# of candidates -> best guess")
 for data in data_list:
-    search_candidates, search_guessess = search(words, data)
-    print("{} -> {}".format(len(search_candidates), search_guessess[0]))
+    search_candidates = search(words, data)
+    print("{} -> {}".format(len(search_candidates), search_candidates[0]))
 
-print("Alternatives: {}".format(search_guessess[1:min(6, len(search_guessess) - 1)]))
+print("Alternatives: {}".format(search_candidates[1:min(6, len(search_candidates) - 1)]))
