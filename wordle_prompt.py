@@ -37,17 +37,19 @@ while True:
     
     # update data
     for i in range(5):
-        if colors[i] == "b":
-            # a character can be black if all other instances of it have been found
-            if not (word[i] in data["yellow"] or word[i] in data["yellow"]): 
-                data["black"] += word[i]
-        elif colors[i] == "y":
+        if colors[i] == "y":
             if word[i] in data["yellow"]:
                 data["yellow"][word[i]].append(i)
             else:
                 data["yellow"][word[i]] = [i]
         elif colors[i] == "g":
             data["green"][word[i]] = i
+    
+    for i in range(5):
+        if colors[i] == "b":
+            # a character can be black if all other instances of it have been found
+            if not (word[i] in data["yellow"] or word[i] in data["green"]): 
+                data["black"] += word[i]
     
     # run search
     candidates = search(wordlist, data)
