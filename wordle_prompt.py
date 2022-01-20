@@ -52,5 +52,9 @@ while True:
     # run search
     candidates = search(wordlist, data)
     print("{} -> {}".format(len(candidates), candidates[0]))
+
+    if len(candidates) == 1:
+        break
+
     print("Alternatives: {}".format(candidates[1:min(6, len(candidates) - 1)]))
     print("")
