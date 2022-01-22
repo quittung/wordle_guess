@@ -24,12 +24,11 @@ Alternatives: ['weren', 'mercy', 'fever', 'nerve', 'derek']
 enter word:   never
 enter colors: ggyyy
 4 -> nerve
-Alternatives: ['nervy', 'nervo']
+Alternatives: ['nervy', 'nervo', 'nervi']
 
 enter word:   nerve
 enter colors: ggggg
-2 -> nerve
-Alternatives: []
+1 -> nerve
 ```
 The solution was indeed "nerve".
 

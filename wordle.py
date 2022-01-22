@@ -11,9 +11,11 @@ def filter_yellow(word_list: list[str], letter: str, bad_indices: list[int]):
         word_list = [word for word in word_list if word[bad_index] != letter]
     return word_list
 
-def filter_green(word_list, letter, index):
+def filter_green(word_list, letter, indices: list[int]):
     """filters out words that don't have a given letter in a specified spot"""
-    return [word for word in word_list if word[index] == letter]
+    for index in indices:
+        word_list = [word for word in word_list if word[index] == letter]
+    return word_list
 
 def load_wordlist(filename: str = "words.txt"):
     with open(filename, "r", encoding="utf-8") as fobj:

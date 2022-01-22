@@ -4,6 +4,14 @@ def check_input(string, char_set):
     """checks if a string is 5 chars long and only contains chars from a given set"""
     return len(string) == 5 and not (set(string) - char_set)
 
+def register_hint(data, color, letter, index):
+    """registers a green or yellow hint"""
+    if letter in data[color]:
+        data[color][letter].append(index)
+    else:
+        data[color][letter] = [index]
+
+
 
 # preparing data
 wordlist = load_wordlist()
@@ -38,12 +46,9 @@ while True:
     # update data
     for i in range(5):
         if colors[i] == "y":
-            if word[i] in data["yellow"]:
-                data["yellow"][word[i]].append(i)
-            else:
-                data["yellow"][word[i]] = [i]
+            register_hint(data, "yellow", word[i], i)
         elif colors[i] == "g":
-            data["green"][word[i]] = i
+            register_hint(data, "green", word[i], i)
     
     for i in range(5):
         if colors[i] == "b":
