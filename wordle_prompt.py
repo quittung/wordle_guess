@@ -63,5 +63,5 @@ while True:
     if len(candidates) == 1:
         break
 
-    print("Alternatives: {}".format(candidates[1:min(6, len(candidates) - 1)]))
+    print("Alternatives: {}".format(candidates[1:6]))
     print("")
