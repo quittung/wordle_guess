@@ -1,4 +1,5 @@
 from wordle import search, load_wordlist
+from frequency import decorate_scorer
 
 def check_input(string, char_set):
     """checks if a string is 5 chars long and only contains chars from a given set"""
@@ -15,6 +16,7 @@ def register_hint(data, color, letter, index):
 
 # preparing data
 wordlist = load_wordlist()
+scorer = decorate_scorer()
 data = {
     "black": "",
     "yellow": {
@@ -26,7 +28,10 @@ data = {
 }
 
 # hints and explanations
-print("try 'tears' first")
+starting_words = wordlist.copy()
+starting_words.sort(key=scorer, reverse=True)
+
+print("try '{}' first".format(starting_words[0]))
 print("line by line, enter a word you tried")
 print("then enter the colors you got as g, y, b")
 print("")
@@ -58,6 +63,9 @@ while True:
     
     # run search
     candidates = search(wordlist, data)
+    if len(candidates) > 250:
+        candidates.sort(key=scorer, reverse=True)
+
     print("{} -> {}".format(len(candidates), candidates[0]))
 
     if len(candidates) == 1:
