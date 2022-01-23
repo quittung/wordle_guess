@@ -34,7 +34,11 @@ The solution was indeed "nerve".
 
 
 ## License and Attributions
-Word list (en_full.txt) is taken from [hermitdave/FrequencyWords](https://github.com/hermitdave/FrequencyWords), which is scraped from OpenSubtitles. words.txt is derived from that. License is CC-by-sa-4.0.
+The frequency ordered word list (en_opensubs.txt) is taken from [hermitdave/FrequencyWords](https://github.com/hermitdave/FrequencyWords), which is scraped from OpenSubtitles. License is "CC-by-sa-4.0".
+
+The verified word list (en_letterpress.txt) is taken from [lorenbrichter/Words](https://github.com/lorenbrichter/Words), which is scraped from OpenSubtitles. License is "CC0-1.0 License".
+
+words.txt is derived from the intersection of those two lists.
 
 My code is licensed under the MIT License. 
 
