@@ -1,5 +1,7 @@
-from wordle import search, load_wordlist, WordleHint
-from frequency import Scorer
+"""command line interface that turns wordle hints into a list of possible words"""
+
+from common.wordle import search, load_wordlist, WordleHint
+from common.frequency import Scorer
 import os
 
 def check_input(string, char_set):

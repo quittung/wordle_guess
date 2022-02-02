@@ -1,4 +1,6 @@
-def load_freqs(filename: str = "letter_freq.csv"):
+"""handles scoring how common the characters in a word are"""
+
+def load_freqs(filename):
     with open(filename, 'r', encoding="utf-8") as fobj:
         lines = [line.split(",") for line in fobj]
 
@@ -10,7 +12,7 @@ def score_word(word: str, freqs: dict[str, float]) -> float:
 
 
 class Scorer(object):
-    def __init__(self, filename: str = "letter_freq.csv"):
+    def __init__(self, filename: str = "common/letter_freq.csv"):
         self.freqs = load_freqs(filename)
     def __call__(self, word):
         return score_word(word, self.freqs)

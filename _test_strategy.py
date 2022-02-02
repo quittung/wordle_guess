@@ -2,8 +2,8 @@
 
 from statistics import mean
 from random import choices
-from wordle import WordleHint, search, load_wordlist
-from frequency import Scorer
+from common.wordle import WordleHint, search, load_wordlist
+from common.frequency import Scorer
 from numpy import linspace
 import multiprocessing as mp
 

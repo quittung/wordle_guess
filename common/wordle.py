@@ -1,3 +1,5 @@
+"""handles wordl hints and filtering wordlists accordingly"""
+
 def filter_black(word_list: list[str], black_list: str):
     """filters out words containing one of the given letters"""
     for letter in black_list:
@@ -17,7 +19,7 @@ def filter_green(word_list, letter, indices: list[int]):
         word_list = [word for word in word_list if word[index] == letter]
     return word_list
 
-def load_wordlist(filename: str = "words.txt"):
+def load_wordlist(filename: str = "common/words.txt"):
     with open(filename, "r", encoding="utf-8") as fobj:
         words = fobj.readlines()
     # strip newline
