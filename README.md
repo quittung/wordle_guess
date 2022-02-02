@@ -15,30 +15,33 @@ Because of type hinting, **Python 3.9 or higher is required**.
 ## Sample Output
 ```
 try 'atone' first
-line by line, enter a word you tried
+line by line, enter a word you tried    
 then enter the colors you got as g, y, b
 
 enter word:   atone
-enter colors: bbbby
-956 -> heirs
-Alternatives: ['hires', 'shier', 'rides', 'dries', 'sired']       
+enter colors: ybbbb
+1064 -> hairs
+Alternatives: ['raids', 'daris', 'dashi', 'sidha', 'liars']     
 
-enter word:   heirs
-enter colors: bgbyb
-46 -> mercy
-Alternatives: ['fever', 'rebel', 'reply', 'refer', 'fewer']       
+enter word:   hairs
+enter colors: yybgy
+4 -> sharp
+Alternatives: ['shark', 'shard', 'shura']
 
-enter word:   mercy
-enter colors: bggbg
-6 -> derby
-Alternatives: ['jerky', 'perky', 'pervy', 'perdy', 'ferly']       
+enter word:   sharp
+enter colors: ggggb
+2 -> shark
+Alternatives: ['shard']
 
-enter word:   derby
-enter colors: ggggg
-1 -> derby
+enter word:   shark
+enter colors: ggggb
+1 -> shard
+finished, press enter to exit
 ```
-The solution was indeed "derby".
+The solution was indeed "shark".
 
+## Links
+Play wordle [here](https://www.powerlanguage.co.uk/wordle/). Try [this](https://hellowordl.net/) version without a daily limit.
 
 ## License and Attributions
 The frequency ordered word list (en_opensubs.txt) is taken from [hermitdave/FrequencyWords](https://github.com/hermitdave/FrequencyWords), which is scraped from OpenSubtitles. License is "CC-by-sa-4.0".
