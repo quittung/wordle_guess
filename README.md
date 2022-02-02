@@ -5,7 +5,7 @@ A script to take the fun out of playing [Wordle](https://www.powerlanguage.co.uk
 ## Usage
 Use the script `wordle_prompt.py` for an interactive prompt. Feed it the current hints and you will get the a word to try. Repeat until finding the solution. Usually takes 3 or 4 rounds to complete.
 
-Above 250 possible words, the script will focus on gathering hints and suggest words with more common letters. Below that it will order words by their frequency in everyday conversation.
+With more than 119 possible words, the script will focus on gathering hints and suggest words with more common letters. Below that it will order words by their frequency in everyday conversation.
 
 Sample output is below.
 

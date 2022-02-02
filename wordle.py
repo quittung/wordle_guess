@@ -20,33 +20,47 @@ def filter_green(word_list, letter, indices: list[int]):
 def load_wordlist(filename: str = "words.txt"):
     with open(filename, "r", encoding="utf-8") as fobj:
         words = fobj.readlines()
+    # strip newline
     words = [word[:-1] for word in words]
     return words
 
+class WordleHint(object):
+    """keeps track of wordle hints"""
+    def __init__(self) -> None:
+        """creates empty hint"""
+        self.black: set[str] = set()
+        self.yellow: dict[str, set[int]] = {}
+        self.green: dict[str, set[int]] = {}
+    
+    def _register_hint(self, color_dict: dict[str, set[int]], letter: str, index: int):
+        """registers a green or yellow hint""" 
+        if letter in color_dict:
+            color_dict[letter].add(index)
+        else:
+            color_dict[letter] = set([index])
 
-def search(wordlist: list[str], data: dict):
-    """searches for candidates and guesses for a given word list and data set
- 
-    example of data to pass:
-    {
-        "black": "taswho",
-        "yellow": {
-            "e": [1, 4]
-        },
-        "green": {
-            "r": 3
-        }
-    }
-    """
+    def update_data(self, word: str, colors: str):
+        """updates data with new hint"""
+        for i in range(5):
+                if colors[i] == "y":
+                    self._register_hint(self.yellow, word[i], i)
+                elif colors[i] == "g":
+                    self._register_hint(self.green, word[i], i)
+            
+        for i in range(5):
+            if colors[i] == "b":
+                # a character can be black if all other instances of it have been found
+                if not (word[i] in self.yellow or word[i] in self.green): 
+                    self.black.add(word[i])
+                else:
+                    self._register_hint(self.yellow, word[i], i)
 
-    candidates = filter_black(wordlist.copy(), data["black"])
-
-    data_yellow: dict[str, list[int]] = data["yellow"]
-    for letter in data_yellow:
-        candidates = filter_yellow(candidates, letter, data_yellow[letter])
-
-    data_green: dict[str, int] = data["green"]
-    for letter in data_green:
-        candidates = filter_green(candidates, letter, data_green[letter])
+def search(wordlist: list[str], data: WordleHint):
+    """searches for candidates and guesses for a given word list and data set"""
+    candidates = filter_black(wordlist.copy(), data.black)
+    for letter in data.yellow:
+        candidates = filter_yellow(candidates, letter, data.yellow[letter])
+    for letter in data.green:
+        candidates = filter_green(candidates, letter, data.green[letter])
 
     return candidates
