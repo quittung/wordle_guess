@@ -49,9 +49,10 @@ if __name__ == "__main__":
             candidates.sort(key=scorer, reverse=True)
 
         # print candidates
-        print("{} -> {}".format(len(candidates), candidates[0]))
+        print("try this: {}".format(candidates[0]))
         if len(candidates) == 1: 
-            input("finished, press enter to exit")
+            input("no alternatives, press enter to exit")
             break
-        print("Alternatives: {}".format(candidates[1:6]))
-        print("")
+        else:
+            print("{} alternative{}: {}".format(len(candidates) - 1, "s" if len(candidates) > 2 else "", candidates[1:6]))
+            print("")

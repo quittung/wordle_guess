@@ -15,28 +15,28 @@ Because of type hinting, **Python 3.9 or higher is required**.
 ## Sample Output
 ```
 try 'atone' first
-line by line, enter a word you tried    
+line by line, enter a word you tried
 then enter the colors you got as g, y, b
 
 enter word:   atone
 enter colors: ybbbb
-1064 -> hairs
-Alternatives: ['raids', 'daris', 'dashi', 'sidha', 'liars']     
+try this: hairs
+1063 alternatives: ['raids', 'daris', 'dashi', 'sidha', 'liars']
 
 enter word:   hairs
 enter colors: yybgy
-4 -> sharp
-Alternatives: ['shark', 'shard', 'shura']
+try this: sharp
+3 alternatives: ['shark', 'shard', 'shura']
 
 enter word:   sharp
 enter colors: ggggb
-2 -> shark
-Alternatives: ['shard']
+try this: shark
+1 alternative: ['shard']
 
 enter word:   shark
 enter colors: ggggb
-1 -> shard
-finished, press enter to exit
+try this: shard
+no alternatives, press enter to exit
 ```
 The solution was indeed "shark".
 
