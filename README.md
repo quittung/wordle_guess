@@ -38,7 +38,7 @@ enter colors: ggggb
 try this: shard
 no alternatives, press enter to exit
 ```
-The solution was indeed "shark".
+The solution was indeed "shard".
 
 ## Links
 Play wordle [here](https://www.powerlanguage.co.uk/wordle/). Try [this](https://hellowordl.net/) version without a daily limit.
