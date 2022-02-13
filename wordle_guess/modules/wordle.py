@@ -19,15 +19,10 @@ def filter_green(word_list, letter, indices: list[int]):
         word_list = [word for word in word_list if word[index] == letter]
     return word_list
 
-def load_wordlist(filename: str = "common/words.txt"):
-    with open(filename, "r", encoding="utf-8") as fobj:
-        words = fobj.readlines()
-    # strip newline
-    words = [word[:-1] for word in words]
-    return words
+
 
 class WordleHint(object):
-    """keeps track of wordle hints"""
+    """keeps track of wordle patterns"""
     def __init__(self) -> None:
         """creates empty hint"""
         self.black: set[str] = set()
@@ -41,28 +36,43 @@ class WordleHint(object):
         else:
             color_dict[letter] = set([index])
 
-    def update_data(self, word: str, colors: str):
+    def update_data(self, word: str, pattern: str):
         """updates data with new hint"""
         for i in range(5):
-                if colors[i] == "y":
+                if pattern[i] == "y":
                     self._register_hint(self.yellow, word[i], i)
-                elif colors[i] == "g":
+                elif pattern[i] == "g":
                     self._register_hint(self.green, word[i], i)
             
         for i in range(5):
-            if colors[i] == "b":
+            if pattern[i] == "b":
                 # a character can be black if all other instances of it have been found
                 if not (word[i] in self.yellow or word[i] in self.green): 
                     self.black.add(word[i])
                 else:
                     self._register_hint(self.yellow, word[i], i)
 
-def search(wordlist: list[str], data: WordleHint):
+def search(wordlist: dict[str, int], data: WordleHint):
     """searches for candidates and guesses for a given word list and data set"""
-    candidates = filter_black(wordlist.copy(), data.black)
+    candidates = filter_black(list(wordlist), data.black)
     for letter in data.yellow:
         candidates = filter_yellow(candidates, letter, data.yellow[letter])
     for letter in data.green:
         candidates = filter_green(candidates, letter, data.green[letter])
 
-    return candidates
+    return {word: wordlist[word] for word in candidates}
+
+
+def get_pattern(guess, solution):
+    """generates the patterns for a guess"""
+    hint = ""
+    for index in range(len(guess)):
+        if not guess[index] in solution:
+            hint += "b"
+        else:
+            if guess[index] == solution[index]:
+                hint += "g"
+            else:
+                hint += "y"
+    
+    return hint
