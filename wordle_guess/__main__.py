@@ -1,4 +1,5 @@
 """command line interface that turns wordle hints into a list of possible words"""
+from multiprocessing.pool import Pool
 
 from app import guesser as gssr
 from app.strategies import entropy
@@ -12,7 +13,8 @@ def check_input(string, char_set):
 
 
 if __name__ == "__main__":
-    guesser = gssr.Guesser(entropy.EntropyStrategy())
+    pool = Pool()
+    guesser = gssr.Guesser(entropy.EntropyStrategy(pool))
     #guesser = gssr.Guesser(unusual_then_common.UnusualThenCommonStrategy())
 
     # hints and explanations
@@ -44,3 +46,5 @@ if __name__ == "__main__":
         else:
             print("{} alternative{}: {}".format(len(guesser.candidates) - 1, "s" if len(guesser.candidates) > 2 else "", guesser.candidates[1:6]))
             print("")
+    
+    pool.close()
