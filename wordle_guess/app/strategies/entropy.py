@@ -1,8 +1,7 @@
-import os.path
-import json
 import collections
 import math
 
+from .. import loader
 from ..wordle import get_pattern
 from . import strategy
 
@@ -39,7 +38,5 @@ class EntropyStrategy(strategy.Strategy):
         return list(entropy_for_list(candidates).keys())
     
     def sort_initial(self, candidates: dict[str, int]) -> list[str]:
-        path = os.path.join(os.path.dirname(__file__), "..", "..", "data", "entropy.json")
-        with open(path, "r", encoding="utf-8") as fobj:
-            entropy_dict = json.load(fobj)
+        entropy_dict = loader.load_json("entropy.json")
         return list(entropy_dict.keys())

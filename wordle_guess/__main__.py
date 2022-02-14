@@ -1,8 +1,8 @@
 """command line interface that turns wordle hints into a list of possible words"""
 
-from modules import guesser as gssr
-from modules.strategies import entropy
-from modules.strategies import unusual_then_common
+from app import guesser as gssr
+from app.strategies import entropy
+from app.strategies import unusual_then_common
 
 import os
 

@@ -1,13 +1,9 @@
-import os.path
-import json
-
 from . import strategy
+from .. import loader
 
-class UnusualThenCommonStrategy(strategy.Strategy):
+class HintsThenCommonStrategy(strategy.Strategy):
     def __init__(self) -> None:
-        path = os.path.join(os.path.dirname(__file__), "..", "..", "data", "letter_freq.json")
-        with open(path, "r", encoding="utf-8") as fobj:
-            self.letter_frequency = json.load(fobj)
+        self.letter_frequency = loader.load_json("letter_freq.json")
 
     def score_word(self, word: str) -> float:
         return sum([self.letter_frequency[char] for char in set(word)])

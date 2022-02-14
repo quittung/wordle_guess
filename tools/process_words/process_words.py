@@ -42,7 +42,7 @@ words_ordered_frequency = {word: int(words_frequency[word]) for word in words_or
 
 # write list to file
 print("exporting list")
-with open(join(dirname(__file__), "..", "..", "wordle_guess", "data", "words.json"), 'w', encoding="utf-8") as fobj:
+with open(join(dirname(__file__), "..", "..", "wordle_guess", "app", "data", "words.json"), 'w', encoding="utf-8") as fobj:
     json.dump(words_ordered_frequency, fobj, indent=2)
 
 print("done")
