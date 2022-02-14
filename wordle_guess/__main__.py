@@ -2,7 +2,7 @@
 
 from app import guesser as gssr
 from app.strategies import entropy
-from app.strategies import unusual_then_common
+from app.strategies import hints_then_common
 
 import os
 
