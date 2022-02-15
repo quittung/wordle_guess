@@ -29,13 +29,20 @@ def entropy_for_guess(words_frequency_normalized: dict[str, float], guess: str):
     entropy = sum([a * b for a, b in zip(patterns_information.values(), patterns_probability_normalized.values())])
     return entropy
 
-def entropy_for_list(words_frequency: dict[str, float], pool: Pool = None):
+def entropy_for_list(words_frequency: dict[str, float], pool: Pool = None, progress_tracker = None):
+    wordlist = list(words_frequency)
+    if progress_tracker: wordlist = progress_tracker(wordlist)
     words_frequency_normalized = normalize(words_frequency)
+
     if pool == None:
-        words_entropy = {word: entropy_for_guess(words_frequency_normalized, word) for word in words_frequency}
+        words_entropy = {word: entropy_for_guess(words_frequency_normalized, word) for word in wordlist}
     else:
-        entropy_list = pool.map(partial(entropy_for_guess, words_frequency_normalized), words_frequency)
+        if progress_tracker:
+            entropy_list = pool.map(partial(entropy_for_guess, words_frequency_normalized), wordlist, chunksize=250)
+        else: 
+            entropy_list = pool.map(partial(entropy_for_guess, words_frequency_normalized), wordlist)
         words_entropy = dict(zip(words_frequency.keys(), entropy_list))
+
     words_entropy_sorted = dict(sorted(words_entropy.items(), key=lambda item: item[1], reverse=True))
     return words_entropy_sorted
 
