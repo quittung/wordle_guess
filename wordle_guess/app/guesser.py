@@ -1,11 +1,13 @@
 from . import wordle, loader
 from .strategies import strategy as strat
 
+def load_wordlist() -> dict[str, int]:
+    return loader.load_json("words.json")
 
 class Guesser(object):
-    def __init__(self, strategy: strat.Strategy) -> None:
+    def __init__(self, strategy: strat.Strategy, wordlist: dict[str, int] = None) -> None:
         self.hints = wordle.WordleHint()
-        self.wordlist = loader.load_json("words.json")
+        self.wordlist = wordlist if wordlist else load_wordlist()
         self.strategy = strategy
         self.candidates = self.strategy.sort_initial(self.wordlist)
 
