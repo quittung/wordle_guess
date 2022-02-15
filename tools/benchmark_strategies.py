@@ -8,6 +8,7 @@ from tqdm import tqdm
 sys.path.append(os.path.join(os.path.dirname(__file__), "..")) 
 from wordle_guess.app import guesser as gssr
 from wordle_guess.app import wordle
+from wordle_guess.app.strategies import entropy, common_words, common_letters, common_switch
 
 def run_game(solution, guesser: gssr.Guesser):
     round_counter = 1
@@ -25,30 +26,26 @@ def run_game(solution, guesser: gssr.Guesser):
     return round_counter
 
 
-
 if __name__ == "__main__":
-    from wordle_guess.app.strategies import entropy
     pool = Pool()
-    strategy = entropy.EntropyStrategy(pool)
+    strategies = [
+        common_words.CommonWordsStrategy(),
+        common_letters.CommonLettersStrategy(),
+        common_switch.CommonSwitchStrategy(),
+        entropy.EntropyStrategy(pool)
+    ]
     
     wordlist = gssr.load_wordlist()
-    words = list(wordlist.keys())#[:100]
-    words_num = len(words)
+    words = list(wordlist.keys())[:1000]
 
-    # import cProfile
-    # pr = cProfile.Profile()
-    # pr.enable()
+    for strategy in strategies:
+        scores = {} 
 
-    scores = {} 
+        for index, word in enumerate(tqdm(words)):
+            score = run_game(word, gssr.Guesser(strategy, wordlist))
+            scores[word] = score
 
-    for index, word in enumerate(tqdm(words)):
-        score = run_game(word, gssr.Guesser(strategy, wordlist))
-        scores[word] = score
-        #print("{} -> {} ({} of {}, {:4.1f}%) ".format(word, score, index, words_num, index / words_num * 100))
-
-    score_mean = mean(scores.values())
-    print("strategy: {}".format(str(strategy)))
-    print("average score: {}".format(score_mean))
-
-    # pr.disable()
-    # pr.print_stats()
+        score_mean = mean(scores.values())
+        print("strategy: {}".format(str(strategy)))
+        print("average score: {:.2f}".format(score_mean))
+        print("")

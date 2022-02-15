@@ -11,6 +11,7 @@ You can choose different strategies with the `-s` argument:
 
 ### Entropy (Standard)
 ```python3 wordle_guess -s entropy```
+ - average score: 3.49
 This strategy was inspired by [3Blue1Brown's video on wordle](https://www.youtube.com/watch?v=v68zYyaEmEA). For every remaining word (guess) it calculates its entropy using the following steps:
  - for every possible remaining solution, calculate the amount of information gained by using that guess 
  - calculate the average of that information, weighted by the likelyhood of that solution appearing in everyday speech
@@ -20,14 +21,17 @@ This strategy was inspired by [3Blue1Brown's video on wordle](https://www.youtub
  
 ### Common Words
 ```python3 wordle_guess -s commonwords```
+ - average score: 3.76
 This strategy ranks the remaining words by how likely they are to apper in everyday speech.
  
 ### Common Letters
 ```python3 wordle_guess -s commonletters```
+ - average score: 4.63
 This strategy ranks the remaining words by how common each word's letters are. The intuition here is that knowing about a more common letter will be a more valuable hint. 
  
 ### Common Letters, Then Common Words
 ```python3 wordle_guess -s commonswitch```
+ - average score: 3.53
 This strategy focuses on getting hints first as long as the list of remaining words is longer than 119. After that it tries the most common word first. 
 This strategy is based on how I play wordle without assistance. The threshold has been determined experimentally.
 
