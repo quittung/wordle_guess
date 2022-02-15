@@ -1,11 +1,8 @@
 """command line interface that turns wordle hints into a list of possible words"""
+import sys, argparse
 from multiprocessing.pool import Pool
 
 from app import guesser as gssr
-from app.strategies import entropy
-from app.strategies import hints_then_common
-
-import os
 
 def check_input(string, char_set):
     """checks if a string is 5 chars long and only contains chars from a given set"""
@@ -13,9 +10,29 @@ def check_input(string, char_set):
 
 
 if __name__ == "__main__":
-    pool = Pool()
-    guesser = gssr.Guesser(entropy.EntropyStrategy(pool))
-    #guesser = gssr.Guesser(unusual_then_common.UnusualThenCommonStrategy())
+    # parse arguments
+    parser = argparse.ArgumentParser()
+    parser.description = "suggests words for wordle"
+    parser.add_argument("-s", "--strategy", choices=["entropy", "commonwords", "commonletters", "commonswitch"], default="entropy", help="choose a strategy for sorting the candidates")
+    args = parser.parse_args()
+
+
+    # choose strategy
+    if args.strategy == "entropy":
+        pool = Pool()
+        from app.strategies import entropy
+        strategy = entropy.EntropyStrategy(pool)
+    elif args.strategy == "commonwords": 
+        from app.strategies import common_words
+        strategy = common_words.CommonWordsStrategy()
+    elif args.strategy == "commonletters": 
+        from app.strategies import common_letters
+        strategy = common_letters.CommonLettersStrategy()
+    elif args.strategy == "commonswitch": 
+        from app.strategies import common_switch
+        strategy = common_switch.CommonSwitchStrategy()
+
+    guesser = gssr.Guesser(strategy)
 
     # hints and explanations
     print("try '{}' first".format(guesser.candidates[0]))
@@ -23,6 +40,7 @@ if __name__ == "__main__":
     print("then enter the colors you got as g, y, b")
     print("")
 
+    # start interactive loop
     while True:
         # get user input
         word = input("enter word:   ")
@@ -47,4 +65,4 @@ if __name__ == "__main__":
             print("{} alternative{}: {}".format(len(guesser.candidates) - 1, "s" if len(guesser.candidates) > 2 else "", guesser.candidates[1:6]))
             print("")
     
-    pool.close()
+    if "pool" in locals(): pool.close()
