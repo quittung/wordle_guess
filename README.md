@@ -3,13 +3,35 @@ A script to take the fun out of playing [Wordle](https://www.powerlanguage.co.uk
 
 
 ## Usage
-Use the script `wordle_prompt.py` for an interactive prompt. Feed it the current hints and you will get the a word to try. Repeat until finding the solution. Usually takes 3 or 4 rounds to complete.
-
-With more than 119 possible words, the script will focus on gathering hints and suggest words with more common letters. Below that it will order words by their frequency in everyday conversation.
-
-Sample output is below.
+Run the app using the command `python3 wordle_guess` to get an interactive prompt. Feed it the current hints and you will get the a word to try. Repeat until finding the solution. Usually takes 3 or 4 rounds to complete.
 
 Because of type hinting, **Python 3.9 or higher is required**.
+
+You can choose different strategies with the `-s` argument:
+
+### Entropy (Standard)
+```python3 wordle_guess -s entropy```
+This strategy was inspired by [3Blue1Brown's video on wordle](https://www.youtube.com/watch?v=v68zYyaEmEA). For every remaining word (guess) it calculates its entropy using the following steps:
+ - for every possible remaining solution, calculate the amount of information gained by using that guess 
+ - calculate the average of that information, weighted by the likelyhood of that solution appearing in everyday speech
+ Information is defined as the logarithm with base two of the number of possible words before guessing divided by the number after for that specific, assumed solution. In other words, it answers how many times a guess would cut the list of possible words in two.
+
+ This strategy tends to 
+ 
+### Common Words
+```python3 wordle_guess -s commonwords```
+This strategy ranks the remaining words by how likely they are to apper in everyday speech.
+ 
+### Common Letters
+```python3 wordle_guess -s commonletters```
+This strategy ranks the remaining words by how common each word's letters are. The intuition here is that knowing about a more common letter will be a more valuable hint. 
+ 
+### Common Letters, Then Common Words
+```python3 wordle_guess -s commonswitch```
+This strategy focuses on getting hints first as long as the list of remaining words is longer than 119. After that it tries the most common word first. 
+This strategy is based on how I play wordle without assistance. The threshold has been determined experimentally.
+
+Sample output is below.
 
 
 ## Sample Output
