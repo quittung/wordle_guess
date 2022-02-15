@@ -32,7 +32,7 @@ The solution was indeed "shard".
 
 
 ## Usage
-Run the app using the command `python3 wordle_guess` to get an interactive prompt. Feed it the current hints and you will get the a word to try. Repeat until finding the solution. Usually takes 3 or 4 rounds to complete.
+Run the app using the command `python3 wordle_guess` to get an interactive prompt. Feed it the current hints and you will get a word to try. Repeat until finding the solution. Usually takes 3 or 4 rounds to complete.
 
 Because of type hinting, **Python 3.9 or higher is required**.
 
