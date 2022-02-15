@@ -43,7 +43,7 @@ if __name__ == "__main__":
 
     for index, word in enumerate(tqdm(words)):
         score = run_game(word, gssr.Guesser(strategy, wordlist))
-        scores[score] = score
+        scores[word] = score
         #print("{} -> {} ({} of {}, {:4.1f}%) ".format(word, score, index, words_num, index / words_num * 100))
 
     score_mean = mean(scores.values())
