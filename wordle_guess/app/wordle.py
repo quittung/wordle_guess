@@ -38,14 +38,14 @@ class WordleHint(object):
 
     def update_data(self, word: str, pattern: str):
         """updates data with new hint"""
-        for i in range(5):
-                if pattern[i] == "y":
+        for i, color in enumerate(pattern):
+                if color == "y":
                     self._register_hint(self.yellow, word[i], i)
-                elif pattern[i] == "g":
+                elif color == "g":
                     self._register_hint(self.green, word[i], i)
             
-        for i in range(5):
-            if pattern[i] == "b":
+        for i, color in enumerate(pattern):
+            if color == "b":
                 # a character can be black if all other instances of it have been found
                 if not (word[i] in self.yellow or word[i] in self.green): 
                     self.black.add(word[i])
@@ -63,16 +63,26 @@ def search(wordlist: dict[str, int], data: WordleHint):
     return {word: wordlist[word] for word in candidates}
 
 
-def get_pattern(guess, solution):
+def get_pattern(guess: str, solution: str):
     """generates the patterns for a guess"""
     hint = ""
-    for index in range(len(guess)):
-        if not guess[index] in solution:
+    for index, letter in enumerate(guess):
+        if not letter in solution:
             hint += "b"
         else:
-            if guess[index] == solution[index]:
+            if letter == solution[index]:
                 hint += "g"
             else:
-                hint += "y"
-    
+                # only color yellow if not already marked in other yellow or any green
+                letter_solution = solution.count(letter)
+                letter_guess_already = guess[:index].count(letter)
+                if letter_solution > letter_guess_already:
+                    letter_green = sum([l == letter and l == solution[i] for i, l in enumerate(guess)])
+                    if letter_solution > letter_guess_already + letter_green:
+                        hint += "y"
+                    else:
+                        hint += "b"
+                else:
+                    hint += "b"
+
     return hint
