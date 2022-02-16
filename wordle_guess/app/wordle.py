@@ -1,5 +1,8 @@
 """handles wordl hints and filtering wordlists accordingly"""
 
+from functools import lru_cache
+
+
 def filter_black(word_list: list[str], black_list: str):
     """filters out words containing one of the given letters"""
     for letter in black_list:
@@ -63,6 +66,7 @@ def search(wordlist: dict[str, int], data: WordleHint):
     return {word: wordlist[word] for word in candidates}
 
 
+@lru_cache(maxsize=2000*2000) # about 1k per cache entry
 def get_pattern(guess: str, solution: str):
     """generates the patterns for a guess"""
     hint = ""
