@@ -9,30 +9,22 @@ from . import strategy
 
 
 
-def dictmap(function, data: dict):
+def optional_dict(function):
     """makes functions designed for lists work with dicts"""
-    return dict(zip(data.keys(), function(data.values())))
-
-def flexmap(func, data: list, pool: Pool = None, tracker = None):
-    """mapper that works with and without multithreading"""
-    if tracker:
-        data = tracker(data)
-    
-    if pool == None:
-        mapper = map
-    else:
-        if tracker:
-            mapper = partial(pool.map, chunksize = 250)
+    def inner(data):
+        if isinstance(data, dict):
+            return dict(zip(data.keys(), function(data.values())))
         else:
-            mapper = pool.map
+            return function(data)
     
-    return list(mapper(func, data))
+    return inner
 
-
+@optional_dict
 def normalize(values: list[float]) -> list[float]:
     total = sum(values)
     return [item / total for item in values]
 
+@optional_dict
 def get_information(rel_freq_list: list[float]):
     """get the information from relative frequency for each list member"""
     return [-math.log2(rf) for rf in rel_freq_list]
@@ -47,29 +39,37 @@ def entropy_for_guess(words: dict[str, float], guess: str):
     pattern = {solution: get_pattern(guess, solution) for solution in words}
 
     # get information in bits describing how much a pattern narrows down the search space
-    pattern_counted = dictmap(normalize, collections.Counter(pattern.values()))
-    pattern_info = dictmap(get_information, pattern_counted)
+    pattern_counted = normalize(collections.Counter(pattern.values()))
+    pattern_info = get_information(pattern_counted)
 
     # get probability as sum of all word freqencies of a pattern
     pattern_prob = {pattern: 0.0 for pattern in pattern_counted}
     for solution, pattern in pattern.items():
         pattern_prob[pattern] += words[solution]
 
-    # calculates entropy as sum of probability * information for each element
+    # calculate entropy
     return get_entropy(pattern_prob.values(), pattern_info.values())
 
-def entropy_for_list(words_frequency: dict[str, float], pool: Pool = None, progress_tracker = None):
-    words_frequency_normalized = dictmap(normalize, words_frequency)
+def entropy_for_list(words_frequency: dict[str, float], mapper = map):
+    # calculate relative frequency of the words
+    words_rel_freq = normalize(words_frequency)
 
+    # get entropy for all words
     words = words_frequency.keys()
-    words_entropy = dict(zip(words, flexmap(partial(entropy_for_guess, words_frequency_normalized), words, pool, progress_tracker)))
+    entropy = mapper(partial(entropy_for_guess, words_rel_freq), words)
 
+    # package as dict and sort by entropy
+    words_entropy = dict(zip(words, entropy))
     words_entropy_sorted = dict(sorted(words_entropy.items(), key=lambda item: item[1], reverse=True))
+
     return words_entropy_sorted
 
 class EntropyStrategy(strategy.Strategy):
+    def __init__(self, pool: Pool = None) -> None:        
+        self.mapper = pool.map if pool else map
+
     def sort_candidates(self, candidates: dict[str, int]) -> list[str]:
-        return list(entropy_for_list(candidates, self.pool).keys())
+        return list(entropy_for_list(candidates, self.mapper).keys())
     
     def sort_initial(self, candidates: dict[str, int]) -> list[str]:
         entropy_dict = loader.load_json("entropy.json")

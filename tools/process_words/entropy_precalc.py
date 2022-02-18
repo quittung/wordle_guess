@@ -14,8 +14,12 @@ if __name__ == "__main__":
     wordlist = guesser.load_wordlist()
 
     print("calculating entropy")
-    print("this might take a while...")
-    entropy_dict = entropy.entropy_for_list(wordlist, Pool(), progress_tracker=tqdm)
+    pool = Pool()
+    
+    def mapper(func, data):
+        return pool.map(func, tqdm(data), chunksize=250)
+
+    entropy_dict = entropy.entropy_for_list(wordlist, mapper)
 
     print("exporting list")
     with open(os.path.join(os.path.dirname(__file__), "..", "..", "wordle_guess", "app", "data", "entropy.json"), 'w', encoding="utf-8") as fobj:

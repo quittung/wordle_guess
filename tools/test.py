@@ -17,7 +17,7 @@ class TestIntegration(unittest.TestCase):
         ]
 
         for challenge, expected_response in test_data:
-            counted = entropy.dictmap(entropy.normalize, collections.Counter(challenge))
+            counted = entropy.normalize(collections.Counter(challenge))
 
             probability = counted.values()
             info = entropy.get_information(probability)
