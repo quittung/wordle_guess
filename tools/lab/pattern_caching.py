@@ -1,12 +1,10 @@
-import cProfile
-import functools
+"""experiments with caching the pattern function"""
+
 from multiprocessing.pool import Pool
 import os, sys
-from subprocess import call
-import json, pickle
+import pickle
 import time
 import zlib
-from matplotlib.font_manager import json_dump
 import itertools
 
 from tqdm import tqdm
