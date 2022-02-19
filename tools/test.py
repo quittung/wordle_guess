@@ -1,14 +1,13 @@
 import collections
-import os, shutil, sys
+import os, sys
 import unittest
-import filecmp
-import subprocess
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "..")) 
 from wordle_guess.app.strategies import entropy
+from wordle_guess.app import wordle
 
 class TestIntegration(unittest.TestCase):
-    def test_entropy_equal(self):
+    def test_entropy(self):
         test_data = [
             [["a", "b", "c", "d"], 2],
             [["a", "b", "a", "b"], 1],
@@ -25,18 +24,17 @@ class TestIntegration(unittest.TestCase):
 
             self.assertAlmostEqual(response, expected_response, places=3)
 
+    
+    def test_pattern(self):
+        test_data = [
+            [("bbba", "abcb"), "ygby"],
+            [("bbba", "abcd"), "bgby"],
+            [("abba", "abcd"), "ggbb"],
+        ]
 
-    # def test_sync_build(self):
-    #     """test sync process with built executable
-    #     FAILS IN DEBUG BUT RUNS FINE AS NORMAL TEST"""
-
-    #     # build app
-    #     set_cwd()
-    #     os.chdir("..")
-    #     subprocess.call(["python3", "build.py"])
-    #     os.chdir("test")
-
-    #     self.run_full_sync(TestVarsFullProcess(prefix=["python3", "../dist/gapsync"]), subprocess.call)
+        for (guess, solution), expected_response in test_data:
+            response = wordle.get_pattern(guess, solution)
+            self.assertEqual(response, expected_response)
 
 
 if __name__ == '__main__':  
