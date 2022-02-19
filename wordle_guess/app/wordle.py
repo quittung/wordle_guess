@@ -1,6 +1,6 @@
 """handles wordl hints and filtering wordlists accordingly"""
 
-from functools import lru_cache
+import functools
 
 
 def filter_black(word_list: list[str], black_list: str):
@@ -65,28 +65,40 @@ def search(wordlist: dict[str, int], data: WordleHint):
 
     return {word: wordlist[word] for word in candidates}
 
-
-@lru_cache(maxsize=2000*2000) # about 1k per cache entry
-def get_pattern(guess: str, solution: str):
-    """generates the patterns for a guess"""
-    hint = ""
-    for index, letter in enumerate(guess):
-        if not letter in solution:
-            hint += "b"
+@functools.cache
+def _cached_counter(solution):
+    """counts letters in words, but cached and a little faster than collections.Counter"""
+    letter_budget = {}
+    for letter in solution:
+        if letter in letter_budget:
+            letter_budget[letter] += 1
         else:
-            if letter == solution[index]:
-                hint += "g"
-            else:
-                # only color yellow if not already marked in other yellow or any green
-                letter_solution = solution.count(letter)
-                letter_guess_already = guess[:index].count(letter)
-                if letter_solution > letter_guess_already:
-                    letter_green = sum([l == letter and l == solution[i] for i, l in enumerate(guess)])
-                    if letter_solution > letter_guess_already + letter_green:
-                        hint += "y"
-                    else:
-                        hint += "b"
-                else:
-                    hint += "b"
+            letter_budget[letter] = 1
+    return letter_budget
+    
+@functools.lru_cache(maxsize=2000*2000) # about 1k per cache entry
+def get_pattern(guess: str, solution: str):
+    """generates the patterns for a pair of guess and solution"""
+    # count letters in solution
+    letter_budget = _cached_counter(solution)
 
-    return hint
+    hint = [None] * len(guess)
+
+    # set and count green letters
+    for index, (letter_guess, letter_solution) in enumerate(zip(guess, solution)):
+        if letter_guess == letter_solution:
+            hint[index] = "g"
+            letter_budget[letter_guess] -= 1
+    
+    # set black and yellow letters
+    for index, (letter_guess, letter_solution) in enumerate(zip(guess, solution)):
+        if not letter_guess in letter_budget:
+            hint[index] = "b"
+        elif letter_guess != letter_solution:
+            if letter_budget[letter_guess] > 0:
+                hint[index] = "y"
+                letter_budget[letter_guess] -= 1
+            else:
+                hint[index] = "b"
+
+    return "".join(hint)

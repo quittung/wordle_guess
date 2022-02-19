@@ -1,6 +1,8 @@
+from collections import Counter
 import os, sys
 import time
 import cProfile
+import functools
 
 from tqdm import tqdm
 
@@ -82,7 +84,118 @@ def get_pattern_precise_quicker(guess: str, solution: str):
 
     return hint
 
+def get_pattern_precise_different(guess: str, solution: str):
+    """generates the patterns for a guess"""
+    letter_budget = Counter(solution)
+    hint = [None] * len(guess)
 
+    for index, (letter_guess, letter_solution) in enumerate(zip(guess, solution)):
+        if letter_guess == letter_solution:
+            hint[index] = "g"
+            letter_budget[letter_guess] -= 1
+    
+    for index, (letter_guess, letter_solution) in enumerate(zip(guess, solution)):
+        if not letter_guess in letter_budget:
+            hint[index] = "b"
+        elif letter_guess != letter_solution:
+            if letter_budget[letter_guess] > 0:
+                hint[index] = "y"
+                letter_budget[letter_guess] -= 1
+            else:
+                hint[index] = "b"
+
+    return "".join(hint)
+
+cached_counter_ext = functools.cache(Counter)
+
+def get_pattern_precise_different_cached(guess: str, solution: str):
+    """generates the patterns for a guess"""
+    letter_budget = cached_counter_ext(solution)
+    hint = [None] * len(guess)
+
+    for index, (letter_guess, letter_solution) in enumerate(zip(guess, solution)):
+        if letter_guess == letter_solution:
+            hint[index] = "g"
+            letter_budget[letter_guess] -= 1
+    
+    for index, (letter_guess, letter_solution) in enumerate(zip(guess, solution)):
+        if not letter_guess in letter_budget:
+            hint[index] = "b"
+        elif letter_guess != letter_solution:
+            if letter_budget[letter_guess] > 0:
+                hint[index] = "y"
+                letter_budget[letter_guess] -= 1
+            else:
+                hint[index] = "b"
+
+    return "".join(hint)
+
+def get_pattern_precise_different_inhouse(guess: str, solution: str):
+    """generates the patterns for a guess"""
+    letter_budget = {}
+    for letter in solution:
+        if letter in letter_budget:
+            letter_budget[letter] += 1
+        else:
+            letter_budget[letter] = 1
+
+    hint = [None] * len(guess)
+
+    for index, (letter_guess, letter_solution) in enumerate(zip(guess, solution)):
+        if letter_guess == letter_solution:
+            hint[index] = "g"
+            letter_budget[letter_guess] -= 1
+    
+    for index, (letter_guess, letter_solution) in enumerate(zip(guess, solution)):
+        if not letter_guess in letter_budget:
+            hint[index] = "b"
+        elif letter_guess != letter_solution:
+            if letter_budget[letter_guess] > 0:
+                hint[index] = "y"
+                letter_budget[letter_guess] -= 1
+            else:
+                hint[index] = "b"
+
+    return "".join(hint)
+
+
+@functools.cache
+def cached_counter(solution):
+    letter_budget = {}
+    for letter in solution:
+        if letter in letter_budget:
+            letter_budget[letter] += 1
+        else:
+            letter_budget[letter] = 1
+    return letter_budget
+
+def get_pattern_precise_different_inhouse_cached(guess: str, solution: str):
+    """generates the patterns for a guess"""
+    letter_budget = cached_counter(solution)
+
+    hint = [None] * len(guess)
+
+    for index, (letter_guess, letter_solution) in enumerate(zip(guess, solution)):
+        if letter_guess == letter_solution:
+            hint[index] = "g"
+            letter_budget[letter_guess] -= 1
+    
+    for index, (letter_guess, letter_solution) in enumerate(zip(guess, solution)):
+        if not letter_guess in letter_budget:
+            hint[index] = "b"
+        elif letter_guess != letter_solution:
+            if letter_budget[letter_guess] > 0:
+                hint[index] = "y"
+                letter_budget[letter_guess] -= 1
+            else:
+                hint[index] = "b"
+
+    return "".join(hint)
+
+
+
+
+#import pattern_cy  
 
 
 word_list = list(guesser.load_wordlist().keys())[:2000]
@@ -100,11 +213,24 @@ assert get_pattern_precise_quicker("bbba", "abcb") == "ygby"
 assert get_pattern_precise_quicker("bbba", "abcd") == "bgby"
 assert get_pattern_precise_quicker("abba", "abcd") == "ggbb"
 
+assert get_pattern_precise_different_inhouse("bbba", "abcb") == "ygby"
+assert get_pattern_precise_different_inhouse("bbba", "abcd") == "bgby"
+assert get_pattern_precise_different_inhouse("abba", "abcd") == "ggbb"
+
+#assert pattern_cy.get_pattern_c("bbba", "abcb") == "ygby"
+#assert pattern_cy.get_pattern_c("bbba", "abcd") == "bgby"
+#assert pattern_cy.get_pattern_c("abba", "abcd") == "ggbb"
+
 func_dict = {
     "original": get_pattern, 
     "enumerate": get_pattern_enumerate,
     "precise": get_pattern_precise,
     "quick": get_pattern_precise_quicker,
+    "different": get_pattern_precise_different,
+    "cached": get_pattern_precise_different_cached,
+    "inhouse": get_pattern_precise_different_inhouse,
+    "inhouse_c": get_pattern_precise_different_inhouse_cached,
+#    "c": pattern_cy.get_pattern_c
     }
 func_timing = {}
 
